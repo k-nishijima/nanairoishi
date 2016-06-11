@@ -25,9 +25,27 @@ func TestLoadConfig(t *testing.T) {
 	}
 
 	t.Log(configs)
-	t.Log(configs[0].Name)
 	for _, v := range configs {
 		t.Log(v.Name + " is " + v.ID)
 	}
 
+}
+
+func TestSaveHistory(t *testing.T) {
+	var config nanairoishi.SGConfig
+	config.Name = "testName"
+	config.IP = "127.0.0.1"
+
+	err := nanairoishi.SaveHistory(config)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestGetHistory(t *testing.T) {
+	name, err := nanairoishi.GetHistory("testName")
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(name)
 }

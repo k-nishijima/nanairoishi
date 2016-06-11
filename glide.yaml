@@ -3,5 +3,5 @@ import:
 - package: github.com/aws/aws-sdk-go
   subpackages:
   - aws
-- package: github.com/kintone/go-kintone
+- package: github.com/bitly/go-simplejson
 - package: github.com/spf13/viper

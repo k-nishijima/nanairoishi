@@ -1,14 +1,38 @@
-hash: c99b720524313854c91a92194a7e5ae95855d7e73d15ec704934f6b8eb4b2bc0
-updated: 2016-06-11T10:07:24.006413673+09:00
+hash: 93e24b532b9c65c26c45e1fa17bf53378e2f46128eab2f566bf9d3b1ad4a1925
+updated: 2016-06-12T07:29:42.071346826+09:00
 imports:
 - name: github.com/aws/aws-sdk-go
   version: 64c371362a7b5ecafa2d7cdf90d19aba7343ae02
   subpackages:
   - aws
+  - aws/credentials
+  - aws/session
+  - service/ec2
+  - aws/awserr
+  - aws/client
+  - aws/corehandlers
+  - aws/defaults
+  - aws/request
+  - private/endpoints
+  - aws/awsutil
+  - aws/client/metadata
+  - private/protocol
+  - private/protocol/ec2query
+  - private/signer/v4
+  - private/waiter
+  - aws/credentials/ec2rolecreds
+  - aws/ec2metadata
+  - private/protocol/query/queryutil
+  - private/protocol/xml/xmlutil
+  - private/protocol/rest
+- name: github.com/bitly/go-simplejson
+  version: aabad6e819789e569bd6aabf444c935aa9ba1e44
 - name: github.com/BurntSushi/toml
   version: f0aeabca5a127c4078abb8c8d64298b147264b55
 - name: github.com/fsnotify/fsnotify
   version: 30411dbcefb7a1da7e84f75530ad3abe4011b4f8
+- name: github.com/go-ini/ini
+  version: 72ba3e6b9e6b87e0c74c9a7a4dc86e8dd8ba4355
 - name: github.com/hashicorp/hcl
   version: d7400db7143f8e869812e50a53acd6c8d92af3b8
   subpackages:
@@ -20,8 +44,8 @@ imports:
   - hcl/strconv
   - json/scanner
   - json/token
-- name: github.com/kintone/go-kintone
-  version: 8e1a5cdeed802f5d6eafa90aecc3f3e6ce40f8df
+- name: github.com/jmespath/go-jmespath
+  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
 - name: github.com/magiconair/properties
   version: c265cfa48dda6474e208715ca93e987829f572f8
 - name: github.com/mitchellh/mapstructure
@@ -35,7 +59,7 @@ imports:
 - name: github.com/spf13/viper
   version: c1ccc378a054ea8d4e38d8c67f6938d4760b53dd
 - name: golang.org/x/sys
-  version: b44883b474ffefa37335017174e397412b633a4f
+  version: 7f918dd405547ecb864d14a8ecbbfe205b5f930f
   subpackages:
   - unix
 - name: gopkg.in/yaml.v2

@@ -27,11 +27,14 @@ func GetMyIP() (string, error) {
 	return strings.TrimRight(string(byteArray), "\n"), nil
 }
 
-func AddRule(dryRun bool, config SGConfig) error {
+func getEC2(config SGConfig) *ec2.EC2 {
 	cred := credentials.NewSharedCredentials("", config.Profile)
 	cfg := aws.NewConfig().WithRegion(config.Region).WithCredentials(cred)
-	svc := ec2.New(session.New(cfg))
+	return ec2.New(session.New(cfg))
+}
 
+func AddRule(dryRun bool, config SGConfig) error {
+	svc := getEC2(config)
 	params := &ec2.AuthorizeSecurityGroupIngressInput{
 		DryRun:  aws.Bool(dryRun),
 		GroupId: aws.String(config.ID),
@@ -49,6 +52,35 @@ func AddRule(dryRun bool, config SGConfig) error {
 		},
 	}
 	resp, err := svc.AuthorizeSecurityGroupIngress(params)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	fmt.Println(resp)
+	return nil
+}
+
+func RemoveRule(dryRun bool, config SGConfig) error {
+	svc := getEC2(config)
+	params := &ec2.RevokeSecurityGroupIngressInput{
+		DryRun:  aws.Bool(dryRun),
+		GroupId: aws.String(config.ID),
+		IpPermissions: []*ec2.IpPermission{
+			{ // Required
+				IpProtocol: aws.String("TCP"),
+				IpRanges: []*ec2.IpRange{
+					{ // Required
+						CidrIp: aws.String(config.IP + "/32"),
+					},
+				},
+				FromPort: aws.Int64(config.Port),
+				ToPort:   aws.Int64(config.Port),
+			},
+		},
+	}
+	resp, err := svc.RevokeSecurityGroupIngress(params)
 
 	if err != nil {
 		fmt.Println(err.Error())
