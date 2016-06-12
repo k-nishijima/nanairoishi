@@ -88,3 +88,23 @@ func RemoveRule(dryRun bool, config SGConfig) error {
 
 	return nil
 }
+
+func DescribeSecurityGroup(config SGConfig) (string, error) {
+	svc := getEC2(config)
+	params := &ec2.DescribeSecurityGroupsInput{
+		GroupIds: []*string{
+			aws.String(config.ID),
+		},
+	}
+	resp, err := svc.DescribeSecurityGroups(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return "", err
+	}
+
+	// Pretty-print the response data.
+	return resp.GoString(), nil
+}

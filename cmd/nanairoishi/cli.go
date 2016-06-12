@@ -158,6 +158,16 @@ func cmdUpdate(c *CLI, dryRun bool, configName string) int {
 		return ExitCodeParseFlagError
 	}
 
-	fmt.Fprintf(c.outStream, "#-----------------------------------------\nupdate successful : %v\n", configName)
+	fmt.Fprintf(c.outStream, "#-----------------------------------------\nupdate successful : %v(%v)\n", configName, config.ID)
+	fmt.Fprintln(c.outStream, "#-----------------------------------------")
+
+	// 現在の結果を出力
+	resp, descErr := nanairoishi.DescribeSecurityGroup(config)
+	if descErr != nil {
+		fmt.Fprintf(c.errStream, "DescribeSecurityGroup failed\n")
+		return ExitCodeParseFlagError
+	}
+	fmt.Fprintln(c.outStream, resp)
+
 	return ExitCodeOK
 }

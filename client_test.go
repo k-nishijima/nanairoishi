@@ -14,6 +14,18 @@ func TestGetMyIP(t *testing.T) {
 	t.Log(ip)
 }
 
+func TestDescribeSecurityGroup(t *testing.T) {
+	var config nanairoishi.SGConfig
+	config.ID = "sg-aaaabbbb"
+	config.Region = "us-west-2"
+
+	resp, err := nanairoishi.DescribeSecurityGroup(config)
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(resp)
+}
+
 /*
 func TestAddRule(t *testing.T) {
 	var c nanairoishi.SGConfig
