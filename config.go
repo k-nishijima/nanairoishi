@@ -1,6 +1,7 @@
 package nanairoishi
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/user"
@@ -29,6 +30,18 @@ func init() {
 	if err != nil {
 		panic("Can't init User Home directory")
 	}
+	// apphomeがあれば初期化
+	if _, apErr := os.Stat(home + APPHOME); os.IsExist(apErr) {
+		viper.SetConfigName("config")
+		viper.AddConfigPath(home + APPHOME)
+	}
+}
+
+func Initialization() string {
+	home, err := HomeDir()
+	if err != nil {
+		panic("Can't init User Home directory")
+	}
 	// apphomeがなければ作る
 	if _, apErr := os.Stat(home + APPHOME); os.IsNotExist(apErr) {
 		mkdirErr := os.Mkdir(home+APPHOME, 0700)
@@ -46,6 +59,12 @@ func init() {
 			panic("Can't init configuration files")
 		}
 	}
+
+	msg := `application home : '%v'
+config file : '%v'
+history file : '%v'
+`
+	return fmt.Sprintf(msg, home+APPHOME, home+CONFIG, home+HISTORY)
 }
 
 func HomeDir() (string, error) {

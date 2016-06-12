@@ -4,4 +4,5 @@ import:
   subpackages:
   - aws
 - package: github.com/bitly/go-simplejson
+- package: github.com/jteeuwen/go-pkg-optarg
 - package: github.com/spf13/viper
