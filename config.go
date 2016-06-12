@@ -1,6 +1,7 @@
 package nanairoishi
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -26,13 +27,15 @@ type SGConfig struct {
 type SGConfigs []SGConfig
 
 func init() {
-	home, err := HomeDir()
-	if err != nil {
+	home, homeErr := HomeDir()
+	if homeErr != nil {
 		panic("Can't init User Home directory")
 	}
 	// apphomeがあれば初期化
-	if _, apErr := os.Stat(home + APPHOME); os.IsExist(apErr) {
+	_, err := os.Stat(home + APPHOME)
+	if err == nil {
 		viper.SetConfigName("config")
+		viper.SetConfigType("yaml")
 		viper.AddConfigPath(home + APPHOME)
 	}
 }
@@ -85,6 +88,11 @@ func initConfig(home string) error {
 }
 
 func LoadConfigs() (SGConfigs, error) {
+	viperErr := viper.ReadInConfig()
+	if viperErr != nil {
+		return nil, viperErr
+	}
+
 	var configs SGConfigs
 	err := viper.UnmarshalKey("Configs", &configs)
 	if err != nil {
@@ -102,36 +110,47 @@ func loadHistoryJson() (*simplejson.Json, string, error) {
 	if ioErr != nil {
 		return nil, "", ioErr
 	}
-	json, jsonErr := simplejson.NewJson(rf)
+	root, jsonErr := simplejson.NewJson(rf)
 	if jsonErr != nil {
 		return nil, "", jsonErr
 	}
-	return json, home, nil
+	return root, home, nil
 }
 
-func GetHistory(name string) (string, error) {
-	json, _, jsonErr := loadHistoryJson()
+func GetHistory(name string) (SGConfig, error) {
+	var config SGConfig
+	root, _, jsonErr := loadHistoryJson()
 	if jsonErr != nil {
-		return "", jsonErr
+		return config, jsonErr
 	}
-	return json.Get(name).String()
+
+	body := root.Get(name).MustString("")
+	// 空文字なら履歴はない
+	if body == "" {
+		config.Name = ""
+		return config, nil
+	}
+
+	unErr := json.Unmarshal([]byte(body), &config)
+	return config, unErr
 }
 
 func SaveHistory(config SGConfig) error {
-	json, home, jsonErr := loadHistoryJson()
+	root, home, jsonErr := loadHistoryJson()
 	if jsonErr != nil {
 		return jsonErr
 	}
 
 	// 値を上書き or 新規作成
-	json.Set(config.Name, config.IP)
+	history, _ := json.Marshal(config)
+	root.Set(config.Name, string(history))
 
 	w, openErr := os.Create(home + HISTORY)
 	if openErr != nil {
 		return openErr
 	}
 	defer w.Close()
-	o, encErr := json.EncodePretty()
+	o, encErr := root.EncodePretty()
 	if encErr != nil {
 		return encErr
 	}

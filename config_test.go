@@ -7,18 +7,6 @@ import (
 )
 
 func TestLoadConfig(t *testing.T) {
-	// h, err := nanairoishi.HomeDir()
-	// if err != nil {
-	// 	t.Error(err)
-	// }
-	// t.Log(h)
-
-	// c := nanairoishi.LoadConfig()
-	// t.Log(c)
-	// // map[string][]string
-	// t.Log(c["Name"][0])
-	// t.Log(c["Name"][1])
-
 	configs, err := nanairoishi.LoadConfigs()
 	if err != nil {
 		t.Error(err)
@@ -34,7 +22,11 @@ func TestLoadConfig(t *testing.T) {
 func TestSaveHistory(t *testing.T) {
 	var config nanairoishi.SGConfig
 	config.Name = "testName"
+	config.Profile = "foobarProf"
+	config.Region = "us-west-2"
+	config.ID = "sg-aaaaaaaa"
 	config.IP = "127.0.0.1"
+	config.Port = 8080
 
 	err := nanairoishi.SaveHistory(config)
 	if err != nil {
@@ -43,9 +35,11 @@ func TestSaveHistory(t *testing.T) {
 }
 
 func TestGetHistory(t *testing.T) {
-	name, err := nanairoishi.GetHistory("testName")
+	c, err := nanairoishi.GetHistory("testName")
 	if err != nil {
 		t.Error(err)
 	}
-	t.Log(name)
+	t.Log(c.Profile)
+	t.Log(c.ID)
+	t.Log(c.IP)
 }

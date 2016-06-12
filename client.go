@@ -51,14 +51,13 @@ func AddRule(dryRun bool, config SGConfig) error {
 			},
 		},
 	}
-	resp, err := svc.AuthorizeSecurityGroupIngress(params)
+	_, err := svc.AuthorizeSecurityGroupIngress(params)
 
 	if err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
 
-	fmt.Println(resp)
 	return nil
 }
 
@@ -80,13 +79,12 @@ func RemoveRule(dryRun bool, config SGConfig) error {
 			},
 		},
 	}
-	resp, err := svc.RevokeSecurityGroupIngress(params)
+	_, err := svc.RevokeSecurityGroupIngress(params)
 
 	if err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
 
-	fmt.Println(resp)
 	return nil
 }
